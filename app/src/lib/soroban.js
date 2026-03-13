@@ -4,6 +4,7 @@
  */
 
 import * as StellarSdk from '@stellar/stellar-sdk';
+import { signTransaction } from '@stellar/freighter-api';
 
 const TESTNET_RPC = 'https://soroban-testnet.stellar.org';
 const TESTNET_NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
@@ -136,15 +137,16 @@ async function getSourceAccount(server) {
 
 /**
  * Build, simulate, assemble, sign with Freighter, and send a contract invocation.
+ * Uses @stellar/freighter-api under the hood to sign.
+ *
  * @param {string} contractId
  * @param {string} method - 'stake' | 'unstake'
  * @param {string} address - signer (G...)
  * @param {string|number} amount
- * @param {{ signTransaction: (tx: string) => Promise<string> }} freighter
  * @param {string} [rpcUrl]
  * @returns {Promise<string>} transaction hash
  */
-export async function invokeContract(contractId, method, address, amount, freighter, rpcUrl = TESTNET_RPC) {
+export async function invokeContract(contractId, method, address, amount, rpcUrl = TESTNET_RPC) {
   const server = getServer(rpcUrl);
   const contract = getContract(contractId, rpcUrl);
 
@@ -170,9 +172,11 @@ export async function invokeContract(contractId, method, address, amount, freigh
       ? StellarSdk.assembleTransaction
       : (raw, simulation) => server.assembleTransaction(raw, simulation);
   const prepared = assemble(tx, sim);
-  const signedXdr = await freighter.signTransaction(prepared.toXDR(), {
+
+  // Ask Freighter to sign the assembled transaction.
+  const signedXdr = await signTransaction(prepared.toXDR(), {
     networkPassphrase: TESTNET_NETWORK_PASSPHRASE,
-    network: 'testnet',
+    network: 'TESTNET',
   });
   const signed = StellarSdk.TransactionBuilder.fromXDR(signedXdr, TESTNET_NETWORK_PASSPHRASE);
   const result = await server.sendTransaction(signed);

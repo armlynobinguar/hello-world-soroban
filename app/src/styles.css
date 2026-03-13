@@ -1,0 +1,175 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 1.9rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  color: #8b949e;
+  font-size: 0.9rem;
+  margin: 0.1rem 0 0.2rem;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: #23863622;
+  color: #3fb950;
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
+.contract {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+  color: #8b949e;
+}
+
+.card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.card h2 {
+  font-size: 1rem;
+  margin: 0 0 0.75rem 0;
+  color: #58a6ff;
+}
+
+.card p {
+  margin: 0 0 0.75rem 0;
+  color: #8b949e;
+  font-size: 0.9rem;
+}
+
+.address {
+  color: #e6edf3;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  font-size: 0.85rem;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  background: #0d1117;
+  color: #e6edf3;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: #238636;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+button:hover:not(:disabled) {
+  background: #2ea043;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  background: #21262d;
+  color: #e6edf3;
+}
+
+button.secondary:hover:not(:disabled) {
+  background: #30363d;
+}
+
+.connect {
+  text-align: center;
+}
+
+.connect button {
+  margin-top: 0.5rem;
+}
+
+.balances ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.balances li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #21262d;
+}
+
+.balances li:last-child {
+  border-bottom: none;
+}
+
+.error {
+  color: #f85149;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.success {
+  color: #3fb950;
+  font-size: 0.9rem;
+}
+
+.success a {
+  color: #58a6ff;
+}
+
+.hint {
+  color: #8b949e;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+code {
+  background: #21262d;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
