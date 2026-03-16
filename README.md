@@ -1,194 +1,183 @@
-## Intro to Soroban Smart Contracts (Rust)
+## Donation Pool — Soroban (Rust) + React
 
-This repository is a **beginner‑friendly playground** for learning Soroban (Stellar) smart contracts in Rust.
+A **beginner‑friendly** Soroban (Stellar) project: one donation‑pool contract and one React app.
 
-It is organized as a small Rust workspace with **separate folders for each sample contract**:
-
-- `contracts/hello_world`: minimal "Hello, \<name\>" contract and test
-- `contracts/increment`: simple counter that **stores data on-chain**
-- `contracts/stakable_token`: DeFi staking (mint, transfer, stake, unstake, 10% APY)
-
-For a quick tour of the samples and what each one teaches, see `contracts/README.md`.
+- **Contract:** `contracts/donation_pool` — `donate`, `total_donated`, `donated(addr)`.
+- **App:** `app/` — React + Vite UI to connect Freighter and record donations, showing a simple leaderboard.
 
 ---
 
-## Staking DeFi dApp (Svelte + Soroban)
+## Step‑by‑step: from zero to UI
 
-This repo includes a **stakable token** contract and a **Svelte** front end for staking on Stellar testnet.
+Follow these steps in order.
 
-- **Contract:** `contracts/stakable_token` — mint, transfer, stake, unstake, 10% APY rewards.
-- **UI:** `app/` — Svelte app that connects Freighter, shows balance/staked/rewards, and lets you stake/unstake.
+### 1. Install prerequisites
 
-### Prerequisites
-
-- **Rust** (1.84+): `rustup default stable`, then `rustup target add wasm32v1-none`
-- **Stellar CLI:** `brew install stellar-cli` (macOS) or [install script](https://github.com/stellar/stellar-cli) — verify with `stellar --version`
-- **Freighter** browser extension: [freighter.app](https://www.freighter.app/)
-
-### 1. Test the contract (no deployment)
-
-From the **repo root**:
-
-```bash
-cargo test -p stakable-token
-```
-
-You should see: `test test::test_stake_and_unstake ... ok`
-
-### 2. Build the contract
-
-From the **repo root**:
-
-```bash
-stellar contract build
-```
-
-Produces `target/wasm32v1-none/release/stakable_token.wasm`.
-
-### 3. Create a testnet identity and deploy
-
-```bash
-# Create and fund admin on testnet
-stellar keys generate admin --network testnet --fund
-
-# Deploy
-stellar contract deploy \
-  --wasm target/wasm32v1-none/release/stakable_token.wasm \
-  --source-account admin \
-  --network testnet
-```
-
-Copy the **contract ID** from the output (starts with `C...`). Get your admin public key:
-
-```bash
-stellar keys public-key admin
-```
-
-### 4. Initialize the contract
-
-Replace `CONTRACT_ID` with the ID from step 3 and `ADMIN_PUBLIC_KEY` with the output of `stellar keys public-key admin`:
-
-```bash
-stellar contract invoke \
-  --id CONTRACT_ID \
-  --source-account admin \
-  --network testnet \
-  -- \
-  init \
-  --admin ADMIN_PUBLIC_KEY
-```
-
-### 5. Fund the reward pool and mint to users
-
-The contract pays rewards from its own balance. Mint to the **contract ID** (reward pool) and to your Freighter address so you can stake in the UI.
-
-Mint to the contract (reward pool):
-
-```bash
-stellar contract invoke \
-  --id CONTRACT_ID \
-  --source-account admin \
-  --network testnet \
-  -- \
-  mint \
-  --admin ADMIN_PUBLIC_KEY \
-  --to CONTRACT_ID \
-  --amount 1000000
-```
-
-Mint to your Freighter address (use `stellar keys public-key freighter` if you added it, or your G... address):
-
-```bash
-stellar contract invoke \
-  --id CONTRACT_ID \
-  --source-account admin \
-  --network testnet \
-  -- \
-  mint \
-  --admin ADMIN_PUBLIC_KEY \
-  --to YOUR_FREIGHTER_PUBLIC_KEY \
-  --amount 10000
-```
-
-### 6. Run the Svelte app
-
-Run these commands **from the `app` directory** (not the repo root), or you’ll get “Missing script: dev”:
-
-```bash
-cd app
-cp .env.example .env
-```
-
-Edit `.env` and set your contract ID:
-
-```
-VITE_CONTRACT_ID=CONTRACT_ID
-```
-
-Then:
-
-```bash
-npm install
-npm run dev
-```
-
-Open the URL (e.g. http://localhost:5173), connect Freighter (switch to **testnet**), and use Stake / Unstake.
-
-### Keys and identities
-
-- Use **admin** (CLI) for deploy, init, and mint. You don’t need to add your Freighter key to the CLI for that.
-- To add your Freighter **public** key so you can use it as `--to` when minting:  
-  `stellar keys add freighter --public-key "G..."`  
-  (That identity cannot sign; it’s for reference only.)
-- Use **Freighter in the browser** when running the app (connect wallet, stake/unstake).
-
----
-
-## General setup (Rust + Stellar CLI)
-
-### Install Rust (macOS)
+- **Rust** (stable) and WASM target:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup default stable
-rustup target add wasm32v1-none
-rustc --version
+rustup target add wasm32-unknown-unknown
 ```
 
-Soroban requires **Rust 1.84.0 or newer**.
-
-### Install Stellar CLI
-
-Pick ONE method (macOS):
+- **Stellar CLI** (used for deploy/invoke):
 
 ```bash
 brew install stellar-cli
-# OR: curl -fsSL https://github.com/stellar/stellar-cli/raw/main/install.sh | sh
-# OR: cargo install --locked stellar-cli
 ```
 
-Verify: `stellar --version`
-
-### Build and test all contracts
+- **Soroban CLI** (only needed to register the testnet RPC endpoint; optional if you already have it):
 
 ```bash
-stellar contract build
-cargo test
+cargo install --locked soroban-cli
 ```
 
-### Deploy and invoke sample contracts (hello_world, increment)
+- **Node.js** (LTS) and **npm**.
+- **Freighter** browser extension, with **Network → Testnet**.
 
-Generate a funded testnet key:
+### 2. Add Soroban Testnet network (one time)
+
+This is done with the Soroban CLI:
 
 ```bash
-stellar keys generate alice --network testnet --fund
+soroban network add --global testnet \
+  --rpc-url https://soroban-testnet.stellar.org:443 \
+  --network-passphrase "Test SDF Network ; September 2015"
 ```
 
-Deploy and invoke as needed (see `contracts/README.md` for examples). Example for hello_world:
+### 3. Build the donation pool contract
+
+From the repo root:
 
 ```bash
-stellar contract deploy --wasm target/wasm32v1-none/release/hello_world.wasm --source-account alice --network testnet --alias hello_world
-stellar contract invoke --id hello_world --source-account alice --network testnet -- hello --to RPC
+cd /Users/armielynobinguar/soroban-smart-contract
+
+cargo build --release -p donation-pool --target wasm32-unknown-unknown
 ```
 
-You can run `stellar contract invoke ... -- --help` for more options.
+This produces:
+
+- `target/wasm32-unknown-unknown/release/donation_pool.wasm`
+
+### 4. Create an `admin` identity on testnet (one time)
+
+Use Stellar CLI:
+
+```bash
+stellar keys generate admin --network testnet --fund
+```
+
+If it says **“An identity with the name 'admin' already exists”**, you are fine; it’s already there.
+
+You can see your identities and admin public key:
+
+```bash
+stellar keys ls
+stellar keys public-key admin
+```
+
+Note the `admin` public key (a `G...` string). Example:
+
+- `GCFQ3BAF5OTQTVD7XCYQSDET454R4L2QJF6KPAOKFRR4234UPQ5WXXGC`
+
+### 5. Deploy the contract
+
+Still from the repo root:
+
+```bash
+stellar contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/donation_pool.wasm \
+  --source-account admin \
+  --network testnet
+```
+
+In the output, copy the **contract ID** starting with `C...` (for example, `CBB...`).
+
+### 6. Initialize the contract (`init --admin`)
+
+Use the `admin` public key from step 4 and the `C...` from step 5:
+
+```bash
+stellar contract invoke \
+  --id CCODK7IDDV2NOUZVGEIOS5SQLKC5N4L3N6SVYECSNMW4CBGEKEJJVV5W \
+  --source-account admin \
+  --network testnet \
+  -- init \
+  --admin GCFQ3BAF5OTQTVD7XCYQSDET454R4L2QJF6KPAOKFRR4234UPQ5WXXGC
+```
+
+Replace with your own values if you redeploy:
+
+- `--id …` should be your **donation_pool** contract ID (`C...`).
+- `--admin …` should be your `admin` public key (`G...`).
+
+### 7. Configure the React app
+
+In the `app` directory:
+
+```bash
+cd /Users/armielynobinguar/soroban-smart-contract/app
+
+cp .env.example .env   # if you haven’t already
+```
+
+Edit `.env` and set:
+
+```env
+VITE_CONTRACT_ID=CONTRACT_ID
+```
+
+Use the same `CONTRACT_ID` from step 5.
+
+### 8. Run the UI
+
+From the `app` directory:
+
+```bash
+npm install        # first time only
+npm run dev
+```
+
+Open the printed URL (usually `http://localhost:5173`) in your browser:
+
+Connect Freighter on **Testnet**, click **Connect**, then **Donate** and **Refresh** to see:
+
+- Your total donated amount.
+- The total donated by all addresses.
+
+---
+
+## Contract details
+
+- **Location:** `contracts/donation_pool/`
+- **Interface:**
+  - `init()`
+  - `donate(from: Address, amount: i128)`
+  - `total_donated() -> i128`
+  - `donated(addr: Address) -> i128`
+- **Tests:**
+
+```bash
+cargo test -p donation-pool
+```
+
+---
+
+## App details
+
+- **Location:** `app/`
+- **Tech:** React, Vite, `@stellar/stellar-sdk`, `@stellar/freighter-api`.
+- **Config:** `.env` → `VITE_CONTRACT_ID=<your C... donation pool id>`.
+- **Scripts** (run from `app/`):
+  - `npm run dev` — start dev server.
+  - `npm run build` — production build.
+  - `npm run preview` — preview production build.
+
+---
+
+## Optional: Wallet SDK
+
+The app talks to Soroban via `@stellar/stellar-sdk` and Freighter.  
+Optionally, you can also use `@stellar/typescript-wallet-sdk` for **Horizon** things (e.g. funding testnet accounts); see `app/src/lib/wallet-sdk.js` for a usage example.
+
