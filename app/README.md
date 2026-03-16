@@ -1,10 +1,10 @@
-# Staking dApp (Svelte)
+# Simple Token dApp (React + Vite)
 
-Front end for the **stakable token** contract. Connect Freighter (testnet), view balance/staked/pending reward, and stake or unstake.
+Front end for the **simple token** contract. Connect Freighter (testnet), view balance, and use Transfer or Mint.
 
 ## Setup
 
-1. Deploy the contract and set the contract ID (see [../DEPLOY.md](../DEPLOY.md)).
+1. Deploy the contract and set the contract ID (see repo root [README](../README.md)).
 2. Copy env example and set your contract ID:
    ```bash
    cp .env.example .env

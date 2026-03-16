@@ -48,6 +48,33 @@ h1 {
   color: #8b949e;
 }
 
+.setup-toggle {
+  margin: 0.5rem 0 0;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: none;
+  color: #58a6ff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.setup-toggle:hover {
+  color: #79b8ff;
+}
+
+.setup-checklist {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.8rem;
+  color: #8b949e;
+  line-height: 1.6;
+}
+
+.setup-checklist li {
+  margin-bottom: 0.35rem;
+}
+
 .card {
   background: #161b22;
   border: 1px solid #30363d;
@@ -66,6 +93,26 @@ h1 {
   margin: 0 0 0.75rem 0;
   color: #8b949e;
   font-size: 0.9rem;
+}
+
+.status {
+  color: #58a6ff !important;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem !important;
+}
+
+.network-tip {
+  margin: 0 0 0.75rem 0;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.8rem;
+  color: #d4a72c;
+  background: #3d2e0022;
+  border: 1px solid #6b5a1a;
+  border-radius: 8px;
+}
+
+.network-tip strong {
+  color: #e6b800;
 }
 
 .address {
@@ -151,6 +198,12 @@ button.secondary:hover:not(:disabled) {
   margin-top: 0.5rem;
 }
 
+.info {
+  color: #58a6ff;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
 .success {
   color: #3fb950;
   font-size: 0.9rem;
@@ -171,5 +224,68 @@ code {
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
   font-size: 0.85em;
+}
+
+/* Activity log panel */
+.log-panel {
+  margin-top: 0.5rem;
+}
+
+.log-toggle {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #8b949e;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.log-toggle:hover {
+  background: #30363d;
+  color: #e6edf3;
+}
+
+.log-content {
+  margin-top: 0.75rem;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+.log-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6e7681;
+}
+
+.log-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.log-line {
+  word-break: break-all;
+  color: #8b949e;
+  padding: 0.15rem 0;
+  border-bottom: 1px solid #21262d;
+}
+
+.log-line:last-child {
+  border-bottom: none;
+}
+
+.log-time {
+  color: #6e7681;
+  margin-right: 0.5rem;
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "staking-dapp",
+  "name": "simple-token-app",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -16,6 +16,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "@stellar/freighter-api": "^6.0.1",
-    "@stellar/stellar-sdk": "^14.6.1"
+    "@stellar/stellar-sdk": "^14.6.1",
+    "@stellar/typescript-wallet-sdk": "^2.0.0"
   }
 }
